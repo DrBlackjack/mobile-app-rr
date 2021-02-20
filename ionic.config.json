@@ -1,0 +1,8 @@
+{
+  "name": "Projet Fil Rouge",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue",
+  "id": "4edf7295"
+}
