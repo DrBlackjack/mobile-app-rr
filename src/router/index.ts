@@ -1,33 +1,40 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-import Tabs from '../views/Tabs.vue'
+import StartPage from '../pages/StartPage.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/tabs/tab1'
+    redirect: '/start'
   },
   {
-    path: '/tabs/',
-    component: Tabs,
-    children: [
-      {
-        path: '',
-        redirect: '/tabs/tab1'
-      },
-      {
-        path: 'tab1',
-        component: () => import('@/views/Tab1.vue')
-      },
-      {
-        path: 'tab2',
-        component: () => import('@/views/Tab2.vue')
-      },
-      {
-        path: 'tab3',
-        component: () => import('@/views/Tab3.vue')
-      }
-    ]
+    path: '/start',
+    name: 'StartPage',
+    component: StartPage
+  },
+  {
+    path: '/login',
+    component: () => import('../pages/LoginPage.vue')
+  },
+  {
+    path: '/register',
+    component: () => import('../pages/RegisterPage.vue')
+  },
+  {
+    path: '/catalog',
+    component: () => import('../pages/CatalogPage.vue')
+  },
+  {
+    path: '/ressource/:id',
+    component: () => import('../pages/RessourcesDetailsPage.vue')
+  },
+  {
+    path: '/create',
+    component: () => import('../pages/CreateRessource.vue')
+  },
+  {
+    path: '/forgot',
+    component: () => import('../pages/ForgotPassword.vue')
   }
 ]
 

@@ -1,6 +1,6 @@
 {
   "appId": "io.ionic.starter",
-  "appName": "Projet Fil Rouge",
+  "appName": "projet-fil-rouge",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "dist",
