@@ -13,13 +13,15 @@
 </template>
 
 <script>
-import{ IonSearchbar } from '@ionic/vue';
+import{ IonSearchbar, IonContent, IonButton } from '@ionic/vue';
 import RessourcesList from "../components/ressources/RessourcesList.vue";
 
 export default {
     components: {
         IonSearchbar,
-        RessourcesList
+        RessourcesList,
+        IonContent,
+        IonButton
     },
     computed: {
         ressources() {

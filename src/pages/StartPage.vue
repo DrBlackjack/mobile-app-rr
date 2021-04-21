@@ -6,7 +6,7 @@
             </ion-button>
         </template>
         <div class="ion-text-center">
-            <img width="280" src="https://cdn.discordapp.com/attachments/803677818574733342/815575349994717184/logo.png"/>
+            <img width="280" src="../assets/logo.png"/>
         </div>
         <div class="ion-padding">
             <ion-button shape="round" expand="block" router-link="/catalog/">Catalogue</ion-button>

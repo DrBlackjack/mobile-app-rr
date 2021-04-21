@@ -4,14 +4,14 @@
             <ion-list>
                 <ion-item>
                     <ion-label position="floating">Email</ion-label>
-                    <ion-input type="email" required  />
+                    <ion-input type="email" required  v-model="email"/>
                 </ion-item>
                 <ion-item>
                     <ion-label position="floating">Mot de passe</ion-label>
-                    <ion-input type="password" required />
+                    <ion-input type="password" required v-model="mdp"/>
                 </ion-item>
             </ion-list>
-            <ion-button shape="round" type="submit" expand="block">Connexion</ion-button>
+            <ion-button @click="testfunction()" shape="round" type="submit" expand="block">Connexion</ion-button>
             <ion-item>
                 <ion-checkbox slot="start"></ion-checkbox>
                 <ion-label>Rester connecté</ion-label>
@@ -28,14 +28,31 @@
 </template>
 
 <script>
-import { IonCheckbox, IonLabel, IonItem, IonNavLink } from "@ionic/vue";
+import { IonCheckbox, IonLabel, IonItem, IonNavLink, IonButton, IonInput, IonList } from "@ionic/vue";
 
 export default {
     components: {
         IonCheckbox,
         IonLabel,
         IonItem,
-        IonNavLink
+        IonNavLink,
+        IonButton,
+        IonInput,
+        IonList
+    },
+    data () {
+        return{
+            email:'',            
+            mdp:''
+        }
+    },
+    methods: {
+        testfunction() {
+            console.log("this.email");
+            console.log(this.email);
+            console.log("this.mdp");
+            console.log(this.mdp);
+        }
     }
 }
 </script>

@@ -4,16 +4,31 @@
             <ion-list>
                 <ion-item>
                     <ion-label position="floating">Email</ion-label>
-                    <ion-input type="email" required />
+                    <ion-input type="email" required v-model="email" />
                 </ion-item>
             </ion-list>
-            <ion-button shape="round" type="submit" expand="block">Envoyer un mail</ion-button>
+            <ion-button @click="testfunction()" shape="round" type="submit" expand="block">Envoyer un mail</ion-button>
         </form>
     </base-layout>
 </template>
 
 <script>
-export default {
-    
+
+import{ IonList, IonItem, IonButton, IonLabel, IonInput } from '@ionic/vue';
+export default {    
+    components: {  
+        IonList, IonItem, IonButton, IonLabel, IonInput
+    },
+    data () {
+        return{
+            email:''
+        }
+    },
+    methods: {
+        testfunction() {
+            console.log("this.email");
+            console.log(this.email);
+        }
+    }
 }
 </script>
