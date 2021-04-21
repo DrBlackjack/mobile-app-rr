@@ -1,0 +1,9 @@
+RewriteEngine on
+
+#utilisateur
+RewriteRule ^api/utilisateur/?$ api/utilisateur.php
+RewriteRule ^api/utilisateur/([0-9]+)?$ api/utilisateur.php?id=$1
+
+#ressources
+RewriteRule ^api/ressources/?$ api/ressources.php
+RewriteRule ^api/ressources/([0-9]+)?$ api/ressources.php?id=$1
