@@ -2,12 +2,13 @@
 {
 	public class UTILISATEUR
 	{
-		public int id_utilisateur;
-		public string mail;
-		public string mdp;
-		public string nom;
-		public string prenom;
-		public int verifie;
-		public int id_type_compte;
+		[System.ComponentModel.DataAnnotations.Key]
+		public int id_utilisateur { get; set; }
+		public string mail { get; set; }
+		public string mdp { get; set; }
+		public string nom { get; set; }
+		public string prenom { get; set; }
+		public int verifie { get; set; }
+		public int id_type_compte { get; set; }
 	}
 }

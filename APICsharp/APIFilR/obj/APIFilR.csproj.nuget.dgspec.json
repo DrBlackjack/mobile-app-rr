@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\tangu\\source\\repos\\APIFilR\\APIFilR\\APIFilR.csproj": {}
+    "C:\\Users\\tangu\\api-rr\\APICsharp\\APIFilR\\APIFilR.csproj": {}
   },
   "projects": {
-    "C:\\Users\\tangu\\source\\repos\\APIFilR\\APIFilR\\APIFilR.csproj": {
+    "C:\\Users\\tangu\\api-rr\\APICsharp\\APIFilR\\APIFilR.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\tangu\\source\\repos\\APIFilR\\APIFilR\\APIFilR.csproj",
+        "projectUniqueName": "C:\\Users\\tangu\\api-rr\\APICsharp\\APIFilR\\APIFilR.csproj",
         "projectName": "APIFilR",
-        "projectPath": "C:\\Users\\tangu\\source\\repos\\APIFilR\\APIFilR\\APIFilR.csproj",
+        "projectPath": "C:\\Users\\tangu\\api-rr\\APICsharp\\APIFilR\\APIFilR.csproj",
         "packagesPath": "C:\\Users\\tangu\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\tangu\\source\\repos\\APIFilR\\APIFilR\\obj\\",
+        "outputPath": "C:\\Users\\tangu\\api-rr\\APICsharp\\APIFilR\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\tangu\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -37,6 +37,28 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[3.1.14, )"
+            },
+            "MySql.Data.EntityFramework": {
+              "target": "Package",
+              "version": "[8.0.24, )"
+            },
+            "MySql.Data.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.22, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[3.2.5, )"
+            },
+            "System.Configuration.ConfigurationManager": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
