@@ -13,6 +13,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using APIFilR.Model;
 using APIFilR.Context;
+using Microsoft.IdentityModel.Tokens;
+using APIFilR.Controllers;
 
 namespace APIFilR
 {
@@ -33,6 +35,23 @@ namespace APIFilR
                 options.UseMySQL(Helper.ConVal("MaConnection")));
 
             services.AddControllers();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "JwtBearer";
+                options.DefaultChallengeScheme = "JwtBearer";
+            })
+            .AddJwtBearer("JwtBearer", jwtOptions =>
+            {
+                jwtOptions.TokenValidationParameters = new TokenValidationParameters() 
+                {
+                    IssuerSigningKey = TokenControlleur.SIGNING_KEY,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromMinutes(5)
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +61,8 @@ namespace APIFilR
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseAuthentication();
 
             app.UseHttpsRedirection();
 
