@@ -2,7 +2,7 @@
 {
 	public class STATUT
 	{
-		public int id_statut;
-		public string libelle_statut;
+		public int id_statut { get; set; }
+		public string libelle_statut { get; set; }
 	}
 }

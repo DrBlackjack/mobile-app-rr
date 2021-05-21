@@ -2,7 +2,7 @@
 {
 	public class STATUT_RESSOURCE
 	{
-		public int id_statut;
-		public string lib_statut;
+		public int id_statut { get; set; }
+		public string lib_statut { get; set; }
 	}
 }

@@ -2,9 +2,9 @@
 {
 	public class COMMENTAIRES
 	{
-		public int id_commentaire;
-		public int id_ressource;
-		public string commentaire;
-		public int id_utilisateur;
+		public int id_commentaire { get; set; }
+		public int id_ressource { get; set; }
+		public string commentaire { get; set; }
+		public int id_utilisateur { get; set; }
 	}
 }

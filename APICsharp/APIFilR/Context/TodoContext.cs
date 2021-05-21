@@ -9,7 +9,5 @@ namespace APIFilR.Context
             : base(options)
         {
         }
-
-        public DbSet<RESSOURCES> DbRESSOURCES { get; set; }
     }
 }
