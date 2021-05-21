@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using APIFilR.Model;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using APIFilR.Context;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using APIFilR.Helpers;
 
 namespace APIFilR
 {
@@ -27,43 +23,55 @@ namespace APIFilR
         [HttpGet]
         public async Task<ActionResult<UTILISATEUR>> PostTodoItem()
         {
-
-            var tt = Helper.ConVal("MaConnection");
             using (UtilisateurContext ctx = new UtilisateurContext())
             {
                 var util = new UTILISATEUR() { id_type_compte = 1, mail = "tt", mdp = "tt", nom = "tt", prenom = "tt", verifie = 1 };
                 ctx.Add(util);
-                await ctx.SaveChangesAsync();
-                //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
+                //await ctx.SaveChangesAsync();
                 return Ok("1");
 
             }
-            //return new string[] { "value1", "value2" };
         }
 
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // GET: api/<controller>
+        [HttpGet("CreateAccount/{mail}/{mdp}/{nom}/{prenom}")]
+        public async Task<ActionResult<UTILISATEUR>> CreateAccount(string mail, string mdp, string nom, string prenom)
         {
-            return "value";
+            using (UtilisateurContext ctx = new UtilisateurContext())
+            {
+                // On check si l'utilisateur n'existe pas déjà
+                if (ctx.utilisateur.Any(t=> t.mail == mail))
+                {
+                    return BadRequest("Already exist");
+                }
+                var util = new UTILISATEUR() { id_type_compte = 1, mail = mail, mdp = Helper.HashPassword(mdp), nom = nom, prenom = prenom, verifie = 0 };
+                ctx.Add(util);
+                await ctx.SaveChangesAsync();
+                //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
+                return Ok(TokenHelper.Get(mail));
+            }            
         }
 
-        // POST api/<controller>
-        [HttpPost]
-        public void Post([FromBody]string value)
+        // GET: api/<controller>
+        [HttpGet("Login/{mail}/{mdp}")]
+        public async Task<ActionResult<UTILISATEUR>> Login(string mail, string mdp)
         {
-        }
-
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            using (UtilisateurContext ctx = new UtilisateurContext())
+            {
+                // On check si l'utilisateur a fournit les bons logins
+                var util = ctx.utilisateur.FirstOrDefault(t => t.mail == mail);
+                if (util == null)
+                {
+                    // Si on ne l'a pas trouvé
+                    return NotFound();
+                }
+                if (Helper.VerifyHash(mdp, util?.mdp))
+                {
+                    return Ok(TokenHelper.Get(mail));
+                }
+                // Mauvais pass
+                return BadRequest("Wrong password");
+            }
         }
     }
 }

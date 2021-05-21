@@ -15,6 +15,7 @@ using APIFilR.Model;
 using APIFilR.Context;
 using Microsoft.IdentityModel.Tokens;
 using APIFilR.Controllers;
+using APIFilR.Helpers;
 
 namespace APIFilR
 {
@@ -44,7 +45,7 @@ namespace APIFilR
             {
                 jwtOptions.TokenValidationParameters = new TokenValidationParameters() 
                 {
-                    IssuerSigningKey = TokenControlleur.SIGNING_KEY,
+                    IssuerSigningKey = TokenHelper.SIGNING_KEY,
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     ValidateIssuerSigningKey = true,
