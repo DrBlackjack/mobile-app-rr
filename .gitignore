@@ -3,3 +3,7 @@
 ################################################################################
 
 /APICsharp/APIFilR/bin
+
+APICsharp/APIFilR/obj/
+
+APICsharp/.vs/

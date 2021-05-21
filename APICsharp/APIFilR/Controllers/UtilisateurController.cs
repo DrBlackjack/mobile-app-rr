@@ -5,6 +5,7 @@ using APIFilR.Model;
 using Microsoft.Extensions.Configuration;
 using APIFilR.Context;
 using APIFilR.Helpers;
+using Microsoft.AspNetCore.Authentication;
 
 namespace APIFilR
 {
@@ -52,7 +53,6 @@ namespace APIFilR
             }            
         }
 
-        // GET: api/<controller>
         [HttpGet("Login/{mail}/{mdp}")]
         public async Task<ActionResult<UTILISATEUR>> Login(string mail, string mdp)
         {
@@ -71,6 +71,20 @@ namespace APIFilR
                 }
                 // Mauvais pass
                 return BadRequest("Wrong password");
+            }
+        }
+
+        [HttpGet("testToken")]
+        public async Task<ActionResult<string>> CheckToken()
+        {
+            try
+            {
+                string token = await HttpContext.GetTokenAsync("access_token");
+                return Ok(TokenHelper.ValidateToken(token));
+            }
+            catch 
+            {
+                return Ok(false);
             }
         }
     }
