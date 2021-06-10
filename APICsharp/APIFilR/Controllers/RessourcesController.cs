@@ -24,7 +24,7 @@ namespace APIFilR
         [HttpGet]
         public async Task<ActionResult<bool>> PostTodoItem()
         {
-            using (UtilisateurContext ctx = new UtilisateurContext())
+            using (MainContext ctx = new MainContext())
             {
                 var util = new UTILISATEUR() { id_type_compte = 1, mail = "tt", mdp = "tt", nom = "tt", prenom = "tt", verifie = 1 };
                 ctx.Add(util);
@@ -37,7 +37,7 @@ namespace APIFilR
         [HttpGet("GetTypeRelationRessource")]
         public async Task<ActionResult<type_relation_ressource>> GetTypeRelationRessource()
         {
-            using (UtilisateurContext ctx = new UtilisateurContext())
+            using (MainContext ctx = new MainContext())
             {               
                 return Ok(ctx.Type_Relation_Ressource.ToList());
             }            
@@ -46,7 +46,7 @@ namespace APIFilR
         [HttpGet("GetCategoriesRessources")]
         public async Task<ActionResult<CATEGORIES_RESSOURCES>> GetCategoriesRessources()
         {
-            using (UtilisateurContext ctx = new UtilisateurContext())
+            using (MainContext ctx = new MainContext())
             {
                 return Ok(ctx.Categories_ressources.ToList());
             }
@@ -55,7 +55,7 @@ namespace APIFilR
         [HttpGet("GetTypeRessources")]
         public async Task<ActionResult<TYPE_RESSOURCES>> GetTypeRessources()
         {
-            using (UtilisateurContext ctx = new UtilisateurContext())
+            using (MainContext ctx = new MainContext())
             {
                 return Ok(ctx.Type_Ressources.ToList());
             }
@@ -69,7 +69,7 @@ namespace APIFilR
             if (!TokenHelper.ValidateToken(token)) return Ok(null);
 
             // On post la resource
-            using (UtilisateurContext ctx = new UtilisateurContext())
+            using (MainContext ctx = new MainContext())
             {
                 var utilisateur = ctx.utilisateur.First(t => t.mail == email);
                 var ressource = new RESSOURCES() {

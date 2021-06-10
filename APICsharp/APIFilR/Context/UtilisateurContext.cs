@@ -4,13 +4,13 @@ using APIFilR.Helpers;
 
 namespace APIFilR.Context
 {
-    public class UtilisateurContext : DbContext
+    public class MainContext : DbContext
     {
-        public UtilisateurContext()
+        public MainContext()
         {
         }
 
-        public UtilisateurContext(DbContextOptions<RessourcesContext> options) : base(options)
+        public MainContext(DbContextOptions<DbContext> options) : base(options)
         {
         }
 

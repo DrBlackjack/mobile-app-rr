@@ -24,7 +24,7 @@ namespace APIFilR
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-            services.AddDbContext<UtilisateurContext>(options =>
+            services.AddDbContext<MainContext>(options =>
                 options.UseMySQL(Helper.ConVal("MaConnection")));
 
             services.AddControllers();

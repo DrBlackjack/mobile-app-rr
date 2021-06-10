@@ -24,7 +24,7 @@ namespace APIFilR
         [HttpGet]
         public async Task<ActionResult<UTILISATEUR>> PostTodoItem()
         {
-            using (UtilisateurContext ctx = new UtilisateurContext())
+            using (MainContext ctx = new MainContext())
             {
                 var util = new UTILISATEUR() { id_type_compte = 1, mail = "tt", mdp = "tt", nom = "tt", prenom = "tt", verifie = 1 };
                 ctx.Add(util);
@@ -38,7 +38,7 @@ namespace APIFilR
         [HttpGet("CreateAccount/{mail}/{mdp}/{nom}/{prenom}")]
         public async Task<ActionResult<UTILISATEUR>> CreateAccount(string mail, string mdp, string nom, string prenom)
         {
-            using (UtilisateurContext ctx = new UtilisateurContext())
+            using (MainContext ctx = new MainContext())
             {
                 // On check si l'utilisateur n'existe pas déjà
                 if (ctx.utilisateur.Any(t=> t.mail == mail))
@@ -56,7 +56,7 @@ namespace APIFilR
         [HttpGet("Login/{mail}/{mdp}")]
         public async Task<ActionResult<UTILISATEUR>> Login(string mail, string mdp)
         {
-            using (UtilisateurContext ctx = new UtilisateurContext())
+            using (MainContext ctx = new MainContext())
             {
                 // On check si l'utilisateur a fournit les bons logins
                 var util = ctx.utilisateur.FirstOrDefault(t => t.mail == mail);
