@@ -23,6 +23,7 @@ namespace APIFilR.Context
         public DbSet<TYPE_RESSOURCES> Type_Ressources { get; set; }
         public DbSet<type_relation_ressource> Type_Relation_Ressource { get; set; }
         public DbSet<CATEGORIES_RESSOURCES> Categories_ressources { get; set; }
+        public DbSet<RESSOURCES> Ressources { get; set; }
     }
     
 }
