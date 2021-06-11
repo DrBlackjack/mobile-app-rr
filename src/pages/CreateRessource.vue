@@ -90,25 +90,23 @@ export default {
     methods: {
         testfunction() {
             const config = {
-                headers: { Authorization: `Bearer ${this.$store.getters.utilisateur.token}` }
+                headers: { 
+                    "Content-Type" : "application/json",
+                    "Authorization": `Bearer ${this.$store.getters.utilisateur.token.value}` 
+                }
             };
-            const ressource = {
-                titre_ressource : this.titre, 
-                description_ressource : this.texte,
-                id_type : this.type,
-                id_categories : this.categorie,
-                id_utilisateur : this.statut
-            };
-            console.log({
-                    ressource : ressource,
-                    relations : this.relation
-                });
+            const json = JSON.stringify({
+                    relations : this.relation,
+                    titreRessource : this.titre, 
+                    descriptionRessource : this.texte,
+                    idType : parseInt(this.type),
+                    idCategories : parseInt(this.categorie),
+                    idStatut : parseInt(this.statut)
+            });
+            console.log(json);
             console.log(config);
             axios.post(this.$constapi + 'Ressources/PostRessource'  + '/' + this.$store.getters.utilisateur.mail,
-                {
-                    ressource : ressource,
-                    relations : this.relation
-                },
+                json,
                 config
             )
             .then(response => {
@@ -118,12 +116,13 @@ export default {
             })
             .catch(e => {
                 console.log(e);
+                console.log(e.response.data);
                 this.errors.push(e);
-            })
+            });
         }
     },
     create () {
-        console.log(this.$store.getters.utilisateur.mail);
+        console.log("created");
     }
 }
 

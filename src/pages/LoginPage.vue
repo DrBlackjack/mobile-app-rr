@@ -13,7 +13,9 @@
             </ion-list>
             <ion-button @click="testfunction()" shape="round" type="submit" expand="block">Connexion</ion-button>
             <ion-item>
-                <ion-checkbox></ion-checkbox>
+                <ion-checkbox>
+                    <slot name="start"></slot>
+                </ion-checkbox>
                 <ion-label>Rester connecté</ion-label>
             </ion-item>
         </form>
