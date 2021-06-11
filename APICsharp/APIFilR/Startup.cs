@@ -27,6 +27,7 @@ namespace APIFilR
             services.AddDbContext<MainContext>(options =>
                 options.UseMySQL(Helper.ConVal("MaConnection")));
 
+            services.AddHttpContextAccessor();
             services.AddControllers();
             services.AddAuthentication(options =>
             {
