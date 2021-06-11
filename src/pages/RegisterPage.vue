@@ -3,8 +3,12 @@
         <form class="ion-padding" @submit.prevent="submitForm">
             <ion-list>
                 <ion-item>
-                    <ion-label position="floating">Pseudo</ion-label>
-                    <ion-input type="text" required v-model="uname"/>
+                    <ion-label position="floating">Nom</ion-label>
+                    <ion-input type="text" required  v-model="nom"/>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating">Prenom</ion-label>
+                    <ion-input type="text" required  v-model="prenom"/>
                 </ion-item>
                 <ion-item>
                     <ion-label position="floating">Email</ion-label>
@@ -26,6 +30,8 @@
 
 <script>
 import { IonLabel, IonItem, IonNavLink, IonButton, IonInput, IonList  } from "@ionic/vue"
+import axios from 'axios';
+import { noSpecialChar } from '../store/index.ts';
 
 export default {
     components: {
@@ -38,20 +44,37 @@ export default {
     },
     data () {
         return{
-            uname:'',
+            nom:'',
+            prenom:'',
             email:'',
             mdp:''
         }
     },
     methods: {
-        testfunction() {
-            console.log("this.uname");
-            console.log(this.uname);
-            console.log("this.email");
-            console.log(this.email);
-            console.log("this.mdp");
-            console.log(this.mdp);
+        testfunction() {  
+            axios.get( this.$constapi + 'utilisateur/CreateAccount/' + this.email + '/' + this.mdp + '/' + noSpecialChar(this.nom) + '/' + noSpecialChar(this.prenom))
+            .then(response => {
+                // JSON responses are automatically parsed.
+                console.log("succes, jeton : ");
+                console.log(response.data);
+                this.$store.dispatch("changeToken", response.data);
+                
+                console.log("email global : " + this.$store.getters.utilisateur.mail + " email de la page : " + this.email );
+                this.$store.dispatch("changeMail", this.email);
+                console.log("changement, email global : " + this.$store.getters.utilisateur.mail + " email de la page : " + this.email );
+            })
+            .catch(error=>  {
+                if (error?.response?.status == 400) {
+                    console.log("email existe déjà");
+                } else {
+                    console.log(error);
+                }
+            })
         }
+    },
+    created() {  
+        console.log(this.$store.getters.ressources); 
+        console.log(this.$store.getters.utilisateur); 
     }
 }
 </script>

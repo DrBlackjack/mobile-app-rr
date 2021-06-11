@@ -1,17 +1,29 @@
-import { useContext } from 'vue';
 import { createStore } from 'vuex';
 
-interface Ressource {
-    ressources: {
-        id: string;
-        image: string;
-        title: string;
-        description: string;
-    }[];
+interface Ressource {   
+    id: string;
+    image: string;
+    title: string;
+    description: string;    
 }
 
-const store = createStore({
-    state(): Ressource {
+interface Utilisateur{
+    token: string;
+    mail: string;
+}
+
+interface StoreType {    
+    ressources: Ressource[];
+    utilisateur: Utilisateur;
+}
+
+// Fonction pour enlever les caractère spéciaux pour les envoyer dans les urls
+export function noSpecialChar(maVar: string){
+    return maVar.replace(/[^a-zA-Z0-9]/g, ''); 
+}
+
+const store = createStore({    
+    state(): StoreType {
         return {
             ressources:  [
                 { 
@@ -86,11 +98,15 @@ const store = createStore({
                     title: "Good eating",
                     description: "Really tasty"
                 }
-            ]
+            ],
+            utilisateur: { 
+                token: 'guest',
+                mail: "guest",
+            }     
         }
     },
     mutations: {
-        addressource(state: Ressource, ressourceData) {
+        addressource(state: StoreType, ressourceData) {
             const newRessource = {
                 id: new Date().toISOString(),
                 title: ressourceData.title,
@@ -99,23 +115,41 @@ const store = createStore({
             };
 
             state.ressources.unshift(newRessource);
+        },
+        changeMonMail(state: StoreType, newMail: string) {
+            state.utilisateur.mail = newMail;
+        },
+        changeMonToken(state: StoreType, newToken: string) {
+            state.utilisateur.token = newToken;
         }
     },
     actions: {
         addressource(context, ressourceData) {
             context.commit('addressource', ressourceData);
+        },
+        changeMail(context, newMail) {
+            context.commit('changeMonMail', newMail);
+        },        
+        changeToken(context, newToken) {
+            context.commit('changeMonToken', newToken);
         }
     },
     getters: {
-        ressources(state: Ressource) {
+        ressources(state: StoreType) {
             return state.ressources;
         },
         ressource(state) {
             return (ressourceId: string) => {
                 return state.ressources.find(ressource => ressource.id === ressourceId);
             };
-        }
+        },        
+        utilisateur(state: StoreType) {
+            return state.utilisateur;
+        }         
     }
 });
 
+
+
 export default store;
+

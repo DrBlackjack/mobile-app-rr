@@ -13,7 +13,7 @@
             </ion-list>
             <ion-button @click="testfunction()" shape="round" type="submit" expand="block">Connexion</ion-button>
             <ion-item>
-                <ion-checkbox slot="start"></ion-checkbox>
+                <ion-checkbox></ion-checkbox>
                 <ion-label>Rester connecté</ion-label>
             </ion-item>
         </form>
@@ -29,6 +29,7 @@
 
 <script>
 import { IonCheckbox, IonLabel, IonItem, IonNavLink, IonButton, IonInput, IonList } from "@ionic/vue";
+import axios from 'axios';
 
 export default {
     components: {
@@ -48,11 +49,30 @@ export default {
     },
     methods: {
         testfunction() {
+            axios.get( this.$constapi + 'utilisateur/Login/' + this.email + '/' + this.mdp)
+                .then(response => {
+                    // JSON responses are automatically parsed.
+                    console.log("succes, jeton : ");
+                    console.log(response.data);
+                    this.$store.dispatch("changeToken", response.data);
+                    
+                    console.log("email global : " + this.$store.getters.utilisateur.mail + " email de la page : " + this.email );
+                    this.$store.dispatch("changeMail", this.email);
+                    console.log("changement, email global : " + this.$store.getters.utilisateur.mail + " email de la page : " + this.email );
+                })
+                .catch(error=>  {
+                    if (error?.response?.status == 400) {
+                        console.log("mauvais mdp");
+                    } else {
+                        console.log(error);
+                    }
+                })
             console.log("this.email");
             console.log(this.email);
             console.log("this.mdp");
             console.log(this.mdp);
         }
-    }
+    },
+    created() {  console.log("create"); }
 }
 </script>

@@ -15,9 +15,9 @@
             <ion-item>
                 <ion-label>Catégorie</ion-label>
                 <ion-select ok-text="OK" cancel-text="Annuler" v-model="categorie">
-                    <ion-select-option value="Communication">Communication</ion-select-option>
-                    <ion-select-option value="Developpementpersonnel">Développement personnel</ion-select-option>
-                    <ion-select-option value="IntelligenceEmotionnelle">Intelligence émotionnelle</ion-select-option>
+                    <ion-select-option value="1">Communication</ion-select-option>
+                    <ion-select-option value="2">Développement personnel</ion-select-option>
+                    <ion-select-option value="3">Intelligence émotionnelle</ion-select-option>
                     <ion-select-option value="Loisirs">Loisirs</ion-select-option>
                     <ion-select-option value="MondeProfessionnel">Monde professionnel</ion-select-option>
                     <ion-select-option value="Parentalite">Parentalité</ion-select-option>
@@ -30,11 +30,11 @@
                 </ion-select>
             </ion-item>
             <ion-item>
-                <ion-label>Ressource</ion-label>
-                <ion-select ok-text="OK" cancel-text="Annuler" v-model="ressource">
-                    <ion-select-option value="Activité">Activité / Jeu à réaliser</ion-select-option>
-                    <ion-select-option value="Article">Article</ion-select-option>
-                    <ion-select-option value="CarteDefi">Carte défi</ion-select-option>
+                <ion-label>Type</ion-label>
+                <ion-select ok-text="OK" cancel-text="Annuler" v-model="type">
+                    <ion-select-option value="1">Activité / Jeu à réaliser</ion-select-option>
+                    <ion-select-option value="2">Article</ion-select-option>
+                    <ion-select-option value="3">Carte défi</ion-select-option>
                     <ion-select-option value="CoursAuFormatPDF">Cours au format PDF</ion-select-option>
                     <ion-select-option value="Exercice">Exercice / Atelier</ion-select-option>
                     <ion-select-option value="FicheDeLecture">Fiche de lecture</ion-select-option>
@@ -44,13 +44,20 @@
             </ion-item>
             <ion-item>
                 <ion-label>Relation</ion-label>
-                <ion-select ok-text="OK" cancel-text="Annuler" v-model="relation">
-                    <ion-select-option value="Soi">Soi</ion-select-option>
-                    <ion-select-option value="Conjoints">Conjoints</ion-select-option>
-                    <ion-select-option value="Famille">Famille : enfants / parents / fratrie</ion-select-option>
+                <ion-select ok-text="OK" cancel-text="Annuler" v-model="relation" multiple="true">
+                    <ion-select-option value="1">Soi</ion-select-option>
+                    <ion-select-option value="2">Conjoints</ion-select-option>
+                    <ion-select-option value="3">Famille : enfants / parents / fratrie</ion-select-option>
                     <ion-select-option value="Professionnelle">Professionnelle : collègues, collaborateurs et managers</ion-select-option>
                     <ion-select-option value="AmisEtCommunautes">Amis et communautés</ion-select-option>
                     <ion-select-option value="Inconnus">Inconnus</ion-select-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label>Statut</ion-label>
+                <ion-select ok-text="OK" cancel-text="Annuler" v-model="statut">
+                    <ion-select-option value="1">Oui</ion-select-option>
+                    <ion-select-option value="2">Non</ion-select-option>
                 </ion-select>
             </ion-item>
             <ion-button @click="testfunction()" shape="round" type="submit" expand="block">Créer</ion-button>
@@ -58,9 +65,11 @@
     </base-layout>
 </template>
 
-<script>
-
+<script type="ts">
+/* eslint-disable */
 import { IonItem, IonLabel, IonInput, IonTextarea, IonButton, IonList, IonSelectOption, IonSelect  } from '@ionic/vue';
+import axios from 'axios';
+
 export default {
     components: {
         IonItem, IonLabel, IonInput, IonTextarea, IonButton, IonList, IonSelectOption, IonSelect
@@ -69,24 +78,53 @@ export default {
         return{
             titre:'',
             texte:'',
-            categorie:'',
-            ressource:'',
-            relation:''
+            categorieArray: [{}],
+            categorie:'',            
+            typeArray: [{}],
+            type:'',
+            relationArray: [{}],
+            relation:[],
+            statut:''
         }
     },
     methods: {
         testfunction() {
-            console.log("this.titre");
-            console.log(this.titre);
-            console.log("this.texte");
-            console.log(this.texte);
-            console.log("this.categorie");
-            console.log(this.categorie);
-            console.log("this.ressource");
-            console.log(this.ressource);
-            console.log("this.relation");
-            console.log(this.relation);
+            const config = {
+                headers: { Authorization: `Bearer ${this.$store.getters.utilisateur.token}` }
+            };
+            const ressource = {
+                titre_ressource : this.titre, 
+                description_ressource : this.texte,
+                id_type : this.type,
+                id_categories : this.categorie,
+                id_utilisateur : this.statut
+            };
+            console.log({
+                    ressource : ressource,
+                    relations : this.relation
+                });
+            console.log(config);
+            axios.post(this.$constapi + 'Ressources/PostRessource'  + '/' + this.$store.getters.utilisateur.mail,
+                {
+                    ressource : ressource,
+                    relations : this.relation
+                },
+                config
+            )
+            .then(response => {
+                // JSON responses are automatically parsed.
+                console.log(response.data);
+                this.posts = response.data;
+            })
+            .catch(e => {
+                console.log(e);
+                this.errors.push(e);
+            })
         }
+    },
+    create () {
+        console.log(this.$store.getters.utilisateur.mail);
     }
 }
+
 </script>

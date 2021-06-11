@@ -32,6 +32,10 @@ const app = createApp(App)
   .use(router)
   .use(store);
 
+  app.config.globalProperties.$constapi = 'https://localhost:44333/';
+  app.config.globalProperties.$token = '';
+  app.config.globalProperties.$email = '';
+
   app.component('base-layout', BaseLayout);
   
 router.isReady().then(() => {
