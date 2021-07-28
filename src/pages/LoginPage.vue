@@ -12,9 +12,9 @@
                 </ion-item>
             </ion-list>
             <ion-button @click="testfunction()" shape="round" type="submit" expand="block">Connexion</ion-button>
+            <ion-label v-if="errorMessage != ''" position="floating" style="color:#C20000">{{errorMessage}}</ion-label>
             <ion-item>
-                <ion-checkbox>
-                    <slot name="start"></slot>
+                <ion-checkbox slot="start">
                 </ion-checkbox>
                 <ion-label>Rester connecté</ion-label>
             </ion-item>
@@ -46,35 +46,36 @@ export default {
     data () {
         return{
             email:'',            
-            mdp:''
+            mdp:'',
+            errorMessage:''
         }
     },
     methods: {
         testfunction() {
+            this.errorMessage = '';
             axios.get( this.$constapi + 'utilisateur/Login/' + this.email + '/' + this.mdp)
                 .then(response => {
-                    // JSON responses are automatically parsed.
-                    console.log("succes, jeton : ");
-                    console.log(response.data);
+                    // On met à jour notre jeton
                     this.$store.dispatch("changeToken", response.data);
                     
-                    console.log("email global : " + this.$store.getters.utilisateur.mail + " email de la page : " + this.email );
+                    //console.log("email global : " + this.$store.getters.utilisateur.mail + " email de la page : " + this.email );
                     this.$store.dispatch("changeMail", this.email);
-                    console.log("changement, email global : " + this.$store.getters.utilisateur.mail + " email de la page : " + this.email );
+                    //console.log("changement, email global : " + this.$store.getters.utilisateur.mail + " email de la page : " + this.email );
+                    this.$router.push('../start'); 
                 })
                 .catch(error=>  {
                     if (error?.response?.status == 400) {
-                        console.log("mauvais mdp");
+                        this.showError("Mauvais mdp");
                     } else {
-                        console.log(error);
+                        this.showError("Une erreur s'est produite");
                     }
-                })
-            console.log("this.email");
-            console.log(this.email);
-            console.log("this.mdp");
-            console.log(this.mdp);
+                });
+        },
+        showError(error){
+            // On affice l'erreur à l'utilisateur 7 secondes
+            this.errorMessage = error;
+            setTimeout(function(){ this.errorMessage = ''; }.bind(this), 7000);
         }
-    },
-    created() {  console.log("create"); }
+    }
 }
 </script>

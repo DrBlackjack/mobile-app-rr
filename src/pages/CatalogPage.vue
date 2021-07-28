@@ -14,7 +14,9 @@
 
 <script>
 import{ IonSearchbar, IonContent, IonButton } from '@ionic/vue';
+import axios from 'axios';
 import RessourcesList from "../components/ressources/RessourcesList.vue";
+
 
 export default {
     components: {
@@ -28,6 +30,26 @@ export default {
             return this.$store.getters.ressources;
         }
     },
+    created: function () {
+        this.MaJRessources();
+    },
+    methods: {
+        MaJRessources(){
+            this.$store.dispatch("mazRessources");
+            axios.get( this.$constapi + 'ressources/GetAllRessources')
+            .then(response => {
+                // tout s'est bien passé
+               response.data.forEach(ressource => {
+                   console.log("import de : ");
+                   console.log(ressource);
+                   this.$store.dispatch("ajouteRessource", { id : ressource.id_ressource, 
+                                                            image : ressource.chemin_document,
+                                                            title : ressource.titre_ressource,
+                                                            description : ressource.description_ressource});
+               });
+            });
+        }
+    }
 }
 
 //const searchbar = document.querySelector('ion-searchbar');

@@ -15,49 +15,25 @@
             <ion-item>
                 <ion-label>Catégorie</ion-label>
                 <ion-select ok-text="OK" cancel-text="Annuler" v-model="categorie">
-                    <ion-select-option value="1">Communication</ion-select-option>
-                    <ion-select-option value="2">Développement personnel</ion-select-option>
-                    <ion-select-option value="3">Intelligence émotionnelle</ion-select-option>
-                    <ion-select-option value="Loisirs">Loisirs</ion-select-option>
-                    <ion-select-option value="MondeProfessionnel">Monde professionnel</ion-select-option>
-                    <ion-select-option value="Parentalite">Parentalité</ion-select-option>
-                    <ion-select-option value="QualiteDeVie">Qualité de vie</ion-select-option>
-                    <ion-select-option value="RechercheDeSens">Recherche de sens</ion-select-option>
-                    <ion-select-option value="SantePhysique">Santé physique</ion-select-option>
-                    <ion-select-option value="SantePsychique">Santé psychique</ion-select-option>
-                    <ion-select-option value="Spiritualite">Spiritualité</ion-select-option>
-                    <ion-select-option value="VieAffective">Vie affective</ion-select-option>
+                    <ion-select-option v-for="cat in categories" :key="cat.id_categories" :value="cat.id_categories"> {{cat.lib_categories}}</ion-select-option>
                 </ion-select>
             </ion-item>
             <ion-item>
                 <ion-label>Type</ion-label>
                 <ion-select ok-text="OK" cancel-text="Annuler" v-model="type">
-                    <ion-select-option value="1">Activité / Jeu à réaliser</ion-select-option>
-                    <ion-select-option value="2">Article</ion-select-option>
-                    <ion-select-option value="3">Carte défi</ion-select-option>
-                    <ion-select-option value="CoursAuFormatPDF">Cours au format PDF</ion-select-option>
-                    <ion-select-option value="Exercice">Exercice / Atelier</ion-select-option>
-                    <ion-select-option value="FicheDeLecture">Fiche de lecture</ion-select-option>
-                    <ion-select-option value="Jeu">Jeu en ligne</ion-select-option>
-                    <ion-select-option value="Video">Vidéo</ion-select-option>
+                    <ion-select-option v-for="el in types" :key="el.id_type" :value="el.id_type"> {{el.lib_type}}</ion-select-option>
                 </ion-select>
             </ion-item>
             <ion-item>
                 <ion-label>Relation</ion-label>
                 <ion-select ok-text="OK" cancel-text="Annuler" v-model="relation" multiple="true">
-                    <ion-select-option value="1">Soi</ion-select-option>
-                    <ion-select-option value="2">Conjoints</ion-select-option>
-                    <ion-select-option value="3">Famille : enfants / parents / fratrie</ion-select-option>
-                    <ion-select-option value="Professionnelle">Professionnelle : collègues, collaborateurs et managers</ion-select-option>
-                    <ion-select-option value="AmisEtCommunautes">Amis et communautés</ion-select-option>
-                    <ion-select-option value="Inconnus">Inconnus</ion-select-option>
+                    <ion-select-option v-for="el in relations" :key="el.id_relation_ressource" :value="el.id_relation_ressource"> {{el.lib_type_relation}}</ion-select-option>
                 </ion-select>
             </ion-item>
             <ion-item>
                 <ion-label>Statut</ion-label>
                 <ion-select ok-text="OK" cancel-text="Annuler" v-model="statut">
-                    <ion-select-option value="1">Oui</ion-select-option>
-                    <ion-select-option value="2">Non</ion-select-option>
+                    <ion-select-option v-for="el in statuts" :key="el.id_statut" :value="el.id_statut"> {{el.lib_statut}}</ion-select-option>
                 </ion-select>
             </ion-item>
             <ion-button @click="testfunction()" shape="round" type="submit" expand="block">Créer</ion-button>
@@ -69,6 +45,7 @@
 /* eslint-disable */
 import { IonItem, IonLabel, IonInput, IonTextarea, IonButton, IonList, IonSelectOption, IonSelect  } from '@ionic/vue';
 import axios from 'axios';
+
 
 export default {
     components: {
@@ -84,10 +61,40 @@ export default {
             type:'',
             relationArray: [{}],
             relation:[],
-            statut:''
+            statut:'',
+
+            categories: [],
+            types: [], 
+            relations: [],
+            statuts: []
         }
     },
+    created: function () {
+        this.GetInfos();
+    },
     methods: {
+        GetInfos(){
+            axios.get( this.$constapi + 'ressources/GetCategoriesRessources')
+            .then(response => {
+                // tout s'est bien passé
+            this.categories = response.data;
+            });
+            axios.get( this.$constapi + 'ressources/GetTypeRessources')
+            .then(response => {
+                // tout s'est bien passé
+            this.types = response.data;
+            });
+            axios.get( this.$constapi + 'ressources/GetTypeRelationRessource')
+            .then(response => {
+                // tout s'est bien passé
+            this.relations = response.data;
+            });
+            axios.get( this.$constapi + 'ressources/GetStatutRessource')
+            .then(response => {
+                // tout s'est bien passé
+            this.statuts = response.data;
+            });
+        },
         testfunction() {
             const config = {
                 headers: { 
@@ -120,9 +127,6 @@ export default {
                 this.errors.push(e);
             });
         }
-    },
-    create () {
-        console.log("created");
     }
 }
 
