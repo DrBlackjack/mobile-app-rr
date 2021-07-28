@@ -55,6 +55,20 @@ namespace APIFilR
             return Ok(ctx.Type_Ressources.ToList());
         }
 
+        [HttpGet("GetStatutRessource")]
+        public ActionResult<type_relation_ressource> GetStatutRessource()
+        {
+            using MainContext ctx = new MainContext();
+            return Ok(ctx.Statut_ressource.ToList());
+        }
+
+        [HttpGet("GetAllRessources")]
+        public ActionResult<RESSOURCES> GeRessources()
+        {
+            using MainContext ctx = new MainContext();
+            return Ok(ctx.Ressources.ToList());
+        }
+
         [HttpPost("PostRessource/{email}")]
         public async Task<ActionResult<RESSOURCES>> PostRessource([FromBody] CreateRessource res, string email)
         {
