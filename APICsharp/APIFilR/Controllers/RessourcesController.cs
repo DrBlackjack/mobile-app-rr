@@ -8,6 +8,7 @@ using APIFilR.Helpers;
 using Microsoft.AspNetCore.Authentication;
 using System;
 using Microsoft.AspNetCore.Http;
+using System.Data.Entity;
 
 namespace APIFilR
 {
@@ -63,7 +64,7 @@ namespace APIFilR
         }
 
         [HttpGet("GetAllRessources")]
-        public ActionResult<RESSOURCES> GeRessources()
+        public ActionResult<RESSOURCES> GetRessources()
         {
             using MainContext ctx = new MainContext();
             return Ok(ctx.Ressources.ToList());
@@ -95,6 +96,44 @@ namespace APIFilR
             ctx.Ressources.Add(ressource);
             await ctx.SaveChangesAsync();
             return Ok(ctx.Ressources.ToList());
+        }
+
+        [HttpGet("GetCommentaire/{idRessource}")]
+        public ActionResult<CommentaireDisplay[]> GetCommentaire(int idRessource)
+        {
+            using MainContext ctx = new MainContext();
+            using MainContext ctx2 = new MainContext();
+            var commentaires1 = ctx.Commentaires.Include(b => b.Utilisateur).ToList();
+            var commentaires = ctx.Commentaires
+            .Include(c => c.Utilisateur)
+            .Where(com => com.id_ressource == idRessource).ToList()
+                .Select(com =>
+                {
+                    return new CommentaireDisplay
+                    {
+                        idUtilisateur = com.id_utilisateur,
+                        utilisateur = com.Utilisateur.prenom + " " + com.Utilisateur.nom,
+                        commentaire = com.commentaire
+                    };
+                });
+            return Ok(commentaires);
+        }
+
+        [HttpPost("PostCommentaire/{email}")]
+        public async Task<ActionResult> PostRessource([FromBody] COMMENTAIRES com, string email)
+        {
+            // Check jwt token
+            string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Substring(7);            
+            if (!TokenHelper.ValidateToken(token)) return BadRequest("Mauvais login");
+
+            // On post la resource
+            using MainContext ctx = new MainContext();
+
+            com.id_utilisateur = ctx.utilisateur.First(t => t.mail == email).id_utilisateur;
+
+            ctx.Commentaires.Add(com);
+            await ctx.SaveChangesAsync();
+            return Ok();
         }
     }
 }

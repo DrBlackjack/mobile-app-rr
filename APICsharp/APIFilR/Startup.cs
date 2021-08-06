@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using APIFilR.Context;
 using Microsoft.IdentityModel.Tokens;
 using APIFilR.Helpers;
+using Microsoft.EntityFrameworkCore.Proxies;
 
 namespace APIFilR
 {
@@ -24,8 +25,9 @@ namespace APIFilR
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-            services.AddDbContext<MainContext>(options =>
-                options.UseMySQL(Helper.ConVal("MaConnection")));
+            var mySqlConnectionStr = Helper.ConVal("MaConnection");
+            services.AddDbContextPool<MainContext>(options => options.UseMySql(mySqlConnectionStr, ServerVersion.AutoDetect(mySqlConnectionStr)));
+            services.AddDbContext<MainContext>(options => options.UseLazyLoadingProxies().UseMySql(mySqlConnectionStr, ServerVersion.AutoDetect(mySqlConnectionStr)));
 
             services.AddHttpContextAccessor();
             services.AddControllers();

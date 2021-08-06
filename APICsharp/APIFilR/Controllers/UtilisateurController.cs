@@ -73,7 +73,7 @@ namespace APIFilR
         }
 
         [HttpGet("testToken")]
-        public async Task<ActionResult<string>> CheckToken()
+        public ActionResult<string> CheckToken()
         {
             try
             {
