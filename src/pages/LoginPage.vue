@@ -64,7 +64,7 @@ export default {
                     this.$router.push('../start'); 
                 })
                 .catch(error=>  {
-                    if (error?.response?.status == 400) {
+                    if (error?.response?.status === 400) {
                         this.showError("Mauvais mdp");
                     } else {
                         this.showError("Une erreur s'est produite");
@@ -72,7 +72,7 @@ export default {
                 });
         },
         showError(error){
-            // On affice l'erreur à l'utilisateur 7 secondes
+            // On affiche l'erreur à l'utilisateur 7 secondes
             this.errorMessage = error;
             setTimeout(function(){ this.errorMessage = ''; }.bind(this), 7000);
         }

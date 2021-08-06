@@ -35,7 +35,7 @@ const store = createStore({
     mutations: {
         addressource(state: StoreType, ressourceData) {
             const newRessource = {
-                id: new Date().toISOString(),
+                id: ressourceData.id,
                 title: ressourceData.title,
                 image: ressourceData.imageUrl,
                 description: ressourceData.description
@@ -48,7 +48,7 @@ const store = createStore({
         changeMonToken(state: StoreType, newToken: string) {
             state.utilisateur.token = newToken;
         },
-        miseAZeroRessources(state: StoreType, newRessource: Ressource) {
+        miseAZeroRessources(state: StoreType) {
             state.ressources =  [] ;
         },
         ajouteMaRessource(state: StoreType, newRessource: Ressource) {
@@ -73,9 +73,9 @@ const store = createStore({
         ressources(state: StoreType) {
             return state.ressources;
         },
-        ressource(state) {
+        ressource(state) { 
             return (ressourceId: string) => {
-                return state.ressources.find(ressource => ressource.id === ressourceId);
+                return state.ressources.find(ressource => ressource.id == ressourceId);
             };
         },        
         utilisateur(state: StoreType) {

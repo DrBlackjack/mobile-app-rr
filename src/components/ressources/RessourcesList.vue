@@ -16,6 +16,6 @@ export default {
     components: {
         IonList,
         RessourceListItem
-    }
+    }    
 }
 </script>
