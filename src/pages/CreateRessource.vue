@@ -11,7 +11,11 @@
                     <ion-textarea rows="5" required v-model="texte"></ion-textarea>
                 </ion-item>
             </ion-list>
-            <ion-button id="outline-button" fill="outline" shape="round" expand="block">Ajouter une image</ion-button>
+            <input style="display: none"
+                type="file" 
+                @change="onFileSelected"
+                ref="fileInput">
+            <ion-button id="outline-button" fill="outline" shape="round" expand="block" @click="$refs.fileInput.click()" >Ajouter une image</ion-button>
             <ion-item>
                 <ion-label>Catégorie</ion-label>
                 <ion-select ok-text="OK" cancel-text="Annuler" v-model="categorie">
@@ -66,7 +70,8 @@ export default {
             categories: [],
             types: [], 
             relations: [],
-            statuts: []
+            statuts: [],
+            selectedFile: null
         }
     },
     created: function () {
@@ -110,10 +115,13 @@ export default {
                     idCategories : parseInt(this.categorie),
                     idStatut : parseInt(this.statut)
             });
-            console.log(json);
+            var fd = new FormData();
+            fd.append("ress", json);
+            fd.append('image', this.selectedFile,  this.selectedFile.name )
+            console.log(fd);
             console.log(config);
             axios.post(this.$constapi + 'Ressources/PostRessource'  + '/' + this.$store.getters.utilisateur.mail,
-                json,
+                fd,
                 config
             )
             .then(response => {
@@ -126,6 +134,9 @@ export default {
                 console.log(e.response.data);
                 this.errors.push(e);
             });
+        },
+        onFileSelected(event){
+            this.selectedFile = event.target.files[0];
         }
     }
 }

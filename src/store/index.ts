@@ -37,7 +37,7 @@ const store = createStore({
             const newRessource = {
                 id: ressourceData.id,
                 title: ressourceData.title,
-                image: ressourceData.imageUrl,
+                image: ressourceData.image,
                 description: ressourceData.description
             };
             state.ressources.unshift(newRessource);

@@ -1,7 +1,7 @@
 <template>
     <base-layout :pageTitle="loadedRessource ? loadedRessource.title : 'Loading...'" page-default-back-link="/catalog">
         <h2 v-if="!loadedRessource">Could not find a ressource for the given id.</h2>
-        <ressource-overview v-else :title="loadedRessource.title" :image="loadedRessource.image" :description="loadedRessource.description" :id="ressourceId" ></ressource-overview>
+        <ressource-overview v-else :title="loadedRessource.title" :image="this.$constapi + loadedRessource.image" :description="loadedRessource.description" :id="ressourceId" ></ressource-overview>
     </base-layout>
 </template>
 

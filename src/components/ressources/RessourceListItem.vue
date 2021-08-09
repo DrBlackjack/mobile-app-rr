@@ -3,7 +3,7 @@
         :router-link="`/ressource/${ressource.id}`"
     >
             <ion-thumbnail slot="start">
-                <ion-img :src="ressource.image" :alt="ressource.title"></ion-img>
+                <ion-img :src="this.$constapi + ressource.image" :alt="ressource.title"></ion-img>
             </ion-thumbnail>
             <ion-label>
                 {{ ressource.title }}
