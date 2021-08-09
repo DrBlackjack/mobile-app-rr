@@ -9,6 +9,8 @@ using APIFilR.Context;
 using Microsoft.IdentityModel.Tokens;
 using APIFilR.Helpers;
 using Microsoft.EntityFrameworkCore.Proxies;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace APIFilR
 {
@@ -57,6 +59,22 @@ namespace APIFilR
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseStaticFiles();// For the wwwroot folder
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                            Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+                RequestPath = "/Images"
+            });
+            //Enable directory browsing
+            app.UseDirectoryBrowser(new DirectoryBrowserOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                            Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+                RequestPath = "/Images"
+            });
 
             app.UseAuthentication();
 
