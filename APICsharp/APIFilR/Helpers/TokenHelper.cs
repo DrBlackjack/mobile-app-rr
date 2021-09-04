@@ -12,6 +12,7 @@ namespace APIFilR.Helpers
     {
         private const string SECRET_KEY = "Ma clef super secrète que personne ne connaît";
         public static readonly SymmetricSecurityKey SIGNING_KEY = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(TokenHelper.SECRET_KEY));
+        private static string test = string.Empty;
         
         public static IActionResult Get(string username)
         {
