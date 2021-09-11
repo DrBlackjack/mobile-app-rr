@@ -1,7 +1,0 @@
-{
-  "name": "projet-fil-rouge",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "vue"
-}
