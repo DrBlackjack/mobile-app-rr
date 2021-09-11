@@ -1,0 +1,20 @@
+ion-toolbar {
+  --background: #5db075;
+}
+
+ion-button {
+  --color: white;
+  --box-shadow: none;
+  --background: #5db075;
+}
+
+ion-nav-link {
+  color: #5db075;
+}
+
+#outline-button {
+  --color: #5db075;
+  --background: white;
+  --border-color: #5db075;
+  --border-width: 1px;
+}
