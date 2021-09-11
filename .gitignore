@@ -11,3 +11,11 @@ APICsharp/.vs/
 APICsharp/APIFilR/Images/
 
 APICsharp/APIFilR/APIFilR.csproj.user
+
+APICsharp/APIFilR.UnitTests/bin/Debug/
+
+APICsharp/APIFilR.UnitTests/bin/Release/
+
+APICsharp/APIFilR.UnitTests/obj/Debug/
+
+APICsharp/APIFilR.UnitTests/obj/Release/
