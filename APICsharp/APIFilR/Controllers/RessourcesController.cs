@@ -75,6 +75,13 @@ namespace APIFilR
             return Ok(ctx.Ressources.ToList());
         }
 
+        [HttpGet("GetRessourcesByType/{idTypeRessource}")]
+        public ActionResult<RESSOURCES> GetRessourcesByType(int idTypeRessource)
+        {
+            using MainContext ctx = new MainContext();
+            return Ok(ctx.Ressources.ToList().Where(r => r.id_type == idTypeRessource));
+        }
+
         [HttpPost("PostRessource/{email}")]
         public async Task<ActionResult<RESSOURCES>> PostRessource([FromForm] string ress,[FromForm] IFormFile image, string email)
         {
