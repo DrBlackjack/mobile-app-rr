@@ -31,7 +31,7 @@ namespace APIFilR
         {
             using MainContext ctx = new MainContext();
             var util = new UTILISATEUR() { id_type_compte = 1, mail = "tt", mdp = "tt", nom = "tt", prenom = "tt", verifie = 1 };
-            ctx.Add(util);
+            ctx.Utilisateur.Add(util);
             //await ctx.SaveChangesAsync();
             return Ok("1");
         }
@@ -42,7 +42,7 @@ namespace APIFilR
         {
             using MainContext ctx = new MainContext();
             // On check si l'utilisateur n'existe pas déjà
-            if (ctx.utilisateur.Any(t => t.mail == mail))
+            if (ctx.Utilisateur.Any(t => t.mail == mail))
             {
                 return BadRequest("Already exist");
             }
@@ -58,7 +58,7 @@ namespace APIFilR
         {
             using MainContext ctx = new MainContext();
             // On check si l'utilisateur a fournit les bons logins
-            var util = ctx.utilisateur.FirstOrDefault(t => t.mail == mail);
+            var util = ctx.Utilisateur.FirstOrDefault(t => t.mail == mail);
             if (util == null)
             {
                 // Si on ne l'a pas trouvé

@@ -5,7 +5,6 @@ using APIFilR.Model;
 using Microsoft.Extensions.Configuration;
 using APIFilR.Context;
 using APIFilR.Helpers;
-using Microsoft.AspNetCore.Authentication;
 using System;
 using Microsoft.AspNetCore.Http;
 using System.Data.Entity;
@@ -92,7 +91,7 @@ namespace APIFilR
             // On post la resource
             CreateRessource res = Newtonsoft.Json.JsonConvert.DeserializeObject<CreateRessource>(ress);
             using MainContext ctx = new MainContext();
-            var utilisateur = ctx.utilisateur.First(t => t.mail == email);
+            var utilisateur = ctx.Utilisateur.First(t => t.mail == email);
 
             var ressource = new RESSOURCES()
             {
@@ -134,8 +133,8 @@ namespace APIFilR
         {
             using MainContext ctx = new MainContext();
             var commentaires = ctx.Commentaires
-            .Include(c => c.Utilisateur)
-            .Where(com => com.id_ressource == idRessource).ToList()
+                .Include(t=>t.Utilisateur)
+                .Where(com => com.id_ressource == idRessource).ToList()
                 .Select(com =>
                 {
                     return new CommentaireDisplay
@@ -144,7 +143,7 @@ namespace APIFilR
                         utilisateur = com.Utilisateur.prenom + " " + com.Utilisateur.nom,
                         commentaire = com.commentaire
                     };
-                });
+                }).ToList();
             return Ok(commentaires);
         }
 
@@ -158,7 +157,7 @@ namespace APIFilR
             // On post la resource
             using MainContext ctx = new MainContext();
 
-            com.id_utilisateur = ctx.utilisateur.First(t => t.mail == email).id_utilisateur;
+            com.id_utilisateur = ctx.Utilisateur.First(t => t.mail == email).id_utilisateur;
 
             ctx.Commentaires.Add(com);
             await ctx.SaveChangesAsync();
