@@ -39,8 +39,8 @@ export default {
             .then(response => {
                 // tout s'est bien passé
                response.data.forEach(ressource => {
-                   console.log("import de : ");
-                   console.log(ressource);
+                   //console.log("import de : ");
+                   //console.log(ressource);
                    this.$store.dispatch("ajouteRessource", { id : ressource.id_ressource, 
                                                             image : ressource.chemin_document,
                                                             title : ressource.titre_ressource,
