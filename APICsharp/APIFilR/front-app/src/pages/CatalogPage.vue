@@ -36,7 +36,13 @@ export default {
     methods: {
         MaJRessources(){
             this.$store.dispatch("mazRessources");
-            axios.get( this.$constapi + 'ressources/GetAllRessources')
+            const config = {
+                headers: { 
+                    "Content-Type" : "application/json",
+                    "Authorization": `Bearer ${this.$store.getters.utilisateur.token.value}` 
+                }
+            };
+            axios.get( this.$constapi + 'ressources/GetPublicRessources/' + this.$store.getters.utilisateur.mail, config)
             .then(response => {
                 // tout s'est bien passé
                response.data.forEach(ressource => {

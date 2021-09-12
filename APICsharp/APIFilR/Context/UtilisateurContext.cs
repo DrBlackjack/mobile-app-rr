@@ -37,16 +37,14 @@ namespace APIFilR.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            /*
-            modelBuilder.Entity<COMMENTAIRES>(entity =>
+            
+            modelBuilder.Entity<STATUT_RESSOURCE>(entity =>
             {
-                entity.Property(t => t.id_utilisateur).HasColumnName("id_utilisateur");
-                entity.HasOne<UTILISATEUR>(p => p.Utilisateur)
-                    .WithMany(b => b.CommentaireList)
-                    .HasForeignKey(u => u.id_utilisateur)
-                    .IsRequired();
+                entity.HasMany<RESSOURCES>(p => p.ListRessources)
+                    .WithOne(b => b.Statut)
+                    .HasForeignKey(u => u.id_statut);
             });
-            */
+            
             
             modelBuilder.Entity<UTILISATEUR>(entity =>
             {
