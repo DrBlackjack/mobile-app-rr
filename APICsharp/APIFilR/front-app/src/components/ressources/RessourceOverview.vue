@@ -11,8 +11,8 @@
         <Ion-Textarea v-model="textCommentaire" placeholder="modifiez-moi"> </Ion-Textarea>
         <ion-button  @click="postCommentaire()">Envoyer</ion-button> 
     </ion-item>
-     <ion-label v-if="errorMessage != ''" position="floating" style="color:#C20000">{{errorMessage}}</ion-label>
     <br/>
+    <ion-label v-if="errorMessage != ''" style="color:#C20000">{{errorMessage}}</ion-label>
     <ion-label class="Commentaire-label" >Commentaires :</ion-label>
     <div class="Commentaire-output" v-for="commentaire in commentaires" :key="commentaire"> 
         <h2> {{commentaire.utilisateur}} </h2>
@@ -38,14 +38,7 @@ export default {
         IonImg, IonTextarea, IonItem, IonLabel, IonButton  
     },
     created() {  
-        //getCommentaires
-        axios.get( this.$constapi + 'ressources/GetCommentaire/' + this.id )
-        .then(response => {
-            // tout s'est bien passé
-            response.data.forEach(rep => {
-                this.commentaires.push({idUtilisateur: rep.idUtilisateur, utilisateur : rep.utilisateur, commentaire : rep.commentaire})
-            });
-        });
+        this.getCommentaires();
     },    
     methods: {
         postCommentaire(){
@@ -73,18 +66,32 @@ export default {
                 json,
                 config
             )
+            .then(e=>{
+                if(e.data.status == "error") {        
+                    this.showError(e.data.message);
+                }
+            })
             .catch(e => {
                 console.log(e);
                 console.log(e.response.data);
                 this.errors.push(e);
             });
             //On actualise les commentaires
-            this.created();
+            this.getCommentaires();
         },
         showError(error){
             // On affiche l'erreur à l'utilisateur 7 secondes
             this.errorMessage = error;
             setTimeout(function(){ this.errorMessage = ''; }.bind(this), 7000);
+        },
+        getCommentaires(){
+            axios.get( this.$constapi + 'ressources/GetCommentaire/' + this.id )
+            .then(response => {
+                // tout s'est bien passé
+                response.data.forEach(rep => {
+                    this.commentaires.push({idUtilisateur: rep.idUtilisateur, utilisateur : rep.utilisateur, commentaire : rep.commentaire})
+                });
+            });
         }
     }
 }

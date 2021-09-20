@@ -120,6 +120,8 @@ namespace APIFilR
             CreateRessource res = Newtonsoft.Json.JsonConvert.DeserializeObject<CreateRessource>(ress);
             using MainContext ctx = new MainContext();
             var utilisateur = ctx.Utilisateur.First(t => t.mail == email);
+            if (utilisateur.verifie != 1 )
+                return Json(new { status = "error", message = "Vous devez être vérifié pour publier une ressource" });
 
             var ressource = new RESSOURCES()
             {
@@ -180,12 +182,15 @@ namespace APIFilR
         {
             // Check jwt token
             string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Substring(7);            
-            if (!TokenHelper.ValidateToken(token)) return BadRequest("Mauvais login");
+            if (!TokenHelper.ValidateToken(token)) return BadRequest("Veuillez vous reconnecter");
 
             // On post la resource
             using MainContext ctx = new MainContext();
+            var utilisateur = ctx.Utilisateur.First(t => t.mail == email);
+            com.id_utilisateur = utilisateur.id_utilisateur;
 
-            com.id_utilisateur = ctx.Utilisateur.First(t => t.mail == email).id_utilisateur;
+            if (utilisateur.verifie != 1)
+                return Json(new { status = "error", message = "Vous devez être vérifié pour commenter une ressource" });
 
             ctx.Commentaires.Add(com);
             await ctx.SaveChangesAsync();
