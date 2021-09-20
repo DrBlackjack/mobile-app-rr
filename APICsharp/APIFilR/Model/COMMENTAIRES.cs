@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace APIFilR.Model
 {
@@ -9,22 +10,11 @@ namespace APIFilR.Model
 		public int id_ressource { get; set; }
 		public string commentaire { get; set; }
 		public int id_utilisateur { get; set; }
-
-		private UTILISATEUR _Utilisateur;
+		[ForeignKey("id_utilisateur")]
+		public virtual UTILISATEUR Utilisateur { get; set; }
 
 		public COMMENTAIRES()
 		{
-		}
-
-		private COMMENTAIRES(ILazyLoader lazyLoader)
-		{
-			LazyLoader = lazyLoader;
-		}
-		private ILazyLoader LazyLoader { get; set; }
-		public UTILISATEUR Utilisateur
-		{
-			get => LazyLoader.Load(this, ref _Utilisateur);
-			set => _Utilisateur = value;
 		}
 	}
 }
