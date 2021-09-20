@@ -14,21 +14,10 @@ namespace APIFilR.Model
 		public int verifie { get; set; }
 		public int id_type_compte { get; set; }
 
-		private List<COMMENTAIRES> _CommentaireList;
-
 		public UTILISATEUR()
 		{
+			CommentaireList = new List<COMMENTAIRES>();
 		}
-
-		private UTILISATEUR(ILazyLoader lazyLoader)
-		{
-			LazyLoader = lazyLoader;
-		}
-		private ILazyLoader LazyLoader { get; set; }
-		public List<COMMENTAIRES> CommentaireList
-		{
-			get => LazyLoader.Load(this, ref _CommentaireList);
-			set => _CommentaireList = value;
-		}
+		public virtual List<COMMENTAIRES> CommentaireList { get; set; }
 	}
 }

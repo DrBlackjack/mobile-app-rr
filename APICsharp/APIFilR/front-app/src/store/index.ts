@@ -12,9 +12,17 @@ interface Utilisateur{
     mail: string;
 }
 
+interface Filtres {
+    categorie: number;
+    type: number;
+    relation: number[];
+    statut: number;
+}
+
 interface StoreType {    
     ressources: Ressource[];
     utilisateur: Utilisateur;
+
 }
 
 // Fonction pour enlever les caractère spéciaux pour les envoyer dans les urls

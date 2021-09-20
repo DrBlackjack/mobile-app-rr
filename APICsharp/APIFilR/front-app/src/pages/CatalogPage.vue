@@ -1,9 +1,7 @@
 <template>
     <base-layout pageTitle="Catalogue" page-default-back-link="/start">
         <template v-slot:actions-end>
-            <ion-button>    
-                Filtre
-            </ion-button>
+            <filter-button></filter-button>
         </template>
         <ion-searchbar></ion-searchbar>
         <ion-content>
@@ -13,17 +11,18 @@
 </template>
 
 <script>
-import{ IonSearchbar, IonContent, IonButton } from '@ionic/vue';
+import{ IonSearchbar, IonContent } from '@ionic/vue';
 import axios from 'axios';
 import RessourcesList from "../components/ressources/RessourcesList.vue";
+import FilterButton from "../components/base/FilterButton.vue";
 
 
 export default {
     components: {
         IonSearchbar,
         RessourcesList,
+        FilterButton,
         IonContent,
-        IonButton
     },
     computed: {
         ressources() {
@@ -36,12 +35,18 @@ export default {
     methods: {
         MaJRessources(){
             this.$store.dispatch("mazRessources");
-            axios.get( this.$constapi + 'ressources/GetAllRessources')
+            const config = {
+                headers: { 
+                    "Content-Type" : "application/json",
+                    "Authorization": `Bearer ${this.$store.getters.utilisateur.token.value}` 
+                }
+            };
+            axios.get( this.$constapi + 'ressources/GetPublicRessources/' + this.$store.getters.utilisateur.mail, config)
             .then(response => {
                 // tout s'est bien passé
                response.data.forEach(ressource => {
-                   console.log("import de : ");
-                   console.log(ressource);
+                   //console.log("import de : ");
+                   //console.log(ressource);
                    this.$store.dispatch("ajouteRessource", { id : ressource.id_ressource, 
                                                             image : ressource.chemin_document,
                                                             title : ressource.titre_ressource,
