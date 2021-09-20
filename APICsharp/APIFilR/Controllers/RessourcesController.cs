@@ -5,13 +5,13 @@ using APIFilR.Model;
 using Microsoft.Extensions.Configuration;
 using APIFilR.Context;
 using APIFilR.Helpers;
-using Microsoft.AspNetCore.Authentication;
 using System;
 using Microsoft.AspNetCore.Http;
 using System.Data.Entity;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using System.Text.RegularExpressions;
+using System.Net;
 
 namespace APIFilR
 {
@@ -69,10 +69,25 @@ namespace APIFilR
         }
 
         [HttpGet("GetAllRessources")]
-        public ActionResult<RESSOURCES> GetRessources()
+        public ActionResult<RessourceDisplay> GetRessources()
         {
             using MainContext ctx = new MainContext();
-            return Ok(ctx.Ressources.ToList());
+            return Ok(ctx.Ressources.Select(t=> t.ToDisplay()).ToList());
+        }
+        
+        [HttpGet("GetPublicRessources/{email}")]
+        public ActionResult<RessourceDisplay> GetPublicRessources(string email)
+        {
+            using MainContext ctx = new MainContext();
+            //On regarde si l'utilisateur est authentifi� et a une session valide
+            var idUtil = ctx.Utilisateur.FirstOrDefault(u => u.mail == email)?.id_utilisateur;
+            string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Substring(7);
+            if (idUtil != null && TokenHelper.ValidateToken(token))
+            {
+                //il est effectivement connect�, on peut rechercher toutes ses ressources aussi
+                return Ok(ctx.Ressources.Include(r => r.Statut).Where(r => r.Statut.lib_statut == "publique" || r.id_utilisateur == idUtil).Select(t => t.ToDisplay()).ToList());
+            }
+            return Ok(ctx.Ressources.Include(r => r.Statut).Where(r => r.Statut.lib_statut == "publique").Select(t => t.ToDisplay()).ToList());
         }
 
         [HttpGet("GetRessourcesByType/{idTypeCategorie}/{idTypeRessource}/{idRelationRessource}/{idStatutRessource}")]
@@ -99,7 +114,7 @@ namespace APIFilR
             // On post la resource
             CreateRessource res = Newtonsoft.Json.JsonConvert.DeserializeObject<CreateRessource>(ress);
             using MainContext ctx = new MainContext();
-            var utilisateur = ctx.utilisateur.First(t => t.mail == email);
+            var utilisateur = ctx.Utilisateur.First(t => t.mail == email);
 
             var ressource = new RESSOURCES()
             {
@@ -141,8 +156,8 @@ namespace APIFilR
         {
             using MainContext ctx = new MainContext();
             var commentaires = ctx.Commentaires
-            .Include(c => c.Utilisateur)
-            .Where(com => com.id_ressource == idRessource).ToList()
+                .Include(t=>t.Utilisateur)
+                .Where(com => com.id_ressource == idRessource).ToList()
                 .Select(com =>
                 {
                     return new CommentaireDisplay
@@ -151,7 +166,7 @@ namespace APIFilR
                         utilisateur = com.Utilisateur.prenom + " " + com.Utilisateur.nom,
                         commentaire = com.commentaire
                     };
-                });
+                }).ToList();
             return Ok(commentaires);
         }
 
@@ -165,7 +180,7 @@ namespace APIFilR
             // On post la resource
             using MainContext ctx = new MainContext();
 
-            com.id_utilisateur = ctx.utilisateur.First(t => t.mail == email).id_utilisateur;
+            com.id_utilisateur = ctx.Utilisateur.First(t => t.mail == email).id_utilisateur;
 
             ctx.Commentaires.Add(com);
             await ctx.SaveChangesAsync();
