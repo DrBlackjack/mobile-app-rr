@@ -13,6 +13,7 @@ namespace APIFilR.Model
 		public string prenom { get; set; }
 		public int verifie { get; set; }
 		public int id_type_compte { get; set; }
+		public string token_verif { get; set; }
 
 		public UTILISATEUR()
 		{
