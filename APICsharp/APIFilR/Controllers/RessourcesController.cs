@@ -62,10 +62,10 @@ namespace APIFilR
         }
 
         [HttpGet("GetStatutRessource")]
-        public ActionResult<type_relation_ressource> GetStatutRessource()
+        public ActionResult<STATUT_RESSOURCE> GetStatutRessource()
         {
             using MainContext ctx = new MainContext();
-            return Ok(ctx.Statut_ressource.ToList());
+            return Ok(ctx.Statut_ressource.Select(t=> t.ToDisplay()).ToList());
         }
 
         [HttpGet("GetAllRessources")]
@@ -90,11 +90,16 @@ namespace APIFilR
             return Ok(ctx.Ressources.Include(r => r.Statut).Where(r => r.Statut.lib_statut == "publique").Select(t => t.ToDisplay()).ToList());
         }
 
-        [HttpGet("GetRessourcesByType/{idTypeCategorie}/{idTypeRessource}/{idRelationRessource}/{idStatutRessource}")]
-        public ActionResult<RESSOURCES> GetRessourcesByType(int idTypeRessource)
+        [HttpGet("GetFilteredRessources/{email}")]
+        public ActionResult<RESSOURCES> GetRessourcesByType(string email)
         {
             using MainContext ctx = new MainContext();
-            return Ok(ctx.Ressources.ToList().Where(r => r.id_type == idTypeRessource));
+            var monJson = WebUtility.UrlDecode(Request.QueryString.Value.ToString()).Split('=')[1];
+            Filter res = Newtonsoft.Json.JsonConvert.DeserializeObject<Filter>(monJson);
+            return Ok(ctx.Ressources.ToList()
+                .Where(r => (res.idType==null? true: r.id_type == res.idType) &&
+                 (res.idCategorie==null? true: r.id_categories == res.idCategorie) &&
+                 (res.idStatut == null? true: r.id_statut == res.idStatut)).Select(t => t.ToDisplay()).ToList());
         }
 
         [HttpPost("PostRessource/{email}")]

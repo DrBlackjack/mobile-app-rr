@@ -15,7 +15,7 @@
         </ion-item>
         <ion-item>
             <ion-label>Relation</ion-label>
-            <ion-select ok-text="OK" cancel-text="Annuler" v-model="relation" multiple="true">
+            <ion-select ok-text="OK" cancel-text="Annuler" v-model="relation" multiple="true" @click="GetFilteredRessources()">
                 <ion-select-option v-for="el in relations" :key="el.id_relation_ressource" :value="el.id_relation_ressource"> {{el.lib_type_relation}}</ion-select-option>
             </ion-select>
         </ion-item>
@@ -58,6 +58,10 @@ export default {
     created: function () {
         this.GetInfos();
     },
+    beforeUnmount: function () {
+        console.log("tmtc");
+        this.GetFilteredRessources();
+    },
     methods: {
         GetInfos(){
             axios.get( this.$constapi + 'ressources/GetCategoriesRessources')
@@ -79,6 +83,36 @@ export default {
             .then(response => {
                 // tout s'est bien passé
             this.statuts = response.data;
+            });
+        }
+        , GetFilteredRessources(){
+            this.$store.dispatch("mazRessources");
+            const config = {
+                params: {
+                    monJson: {
+                        idCategorie: parseInt(this.categorie),
+                        idType: parseInt(this.type),
+                        idRelation: parseInt(this.relation),
+                        idStatut: parseInt(this.statut)
+                    }
+                },
+                headers: { 
+                    "Content-Type" : "application/json",
+                    "Authorization": `Bearer ${this.$store.getters.utilisateur.token.value}`                     
+                }
+            }
+            console.log(config);
+            axios.get(this.$constapi + 'ressources/GetFilteredRessources/' + this.$store.getters.utilisateur.mail, config)
+            .then(response => {
+                // tout s'est bien passé
+               response.data.forEach(ressource => {
+                   //console.log("import de : ");
+                   //console.log(ressource);
+                   this.$store.dispatch("ajouteRessource", { id : ressource.id_ressource, 
+                                                            image : ressource.chemin_document,
+                                                            title : ressource.titre_ressource,
+                                                            description : ressource.description_ressource});
+               });
             });
         }
     }

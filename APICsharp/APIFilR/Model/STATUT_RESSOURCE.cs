@@ -14,5 +14,12 @@ namespace APIFilR.Model
 		public string lib_statut { get; set; }
 
 		public virtual List<RESSOURCES> ListRessources { get; set; }
+
+		public StatutDisplay ToDisplay() => new StatutDisplay 
+		{ 
+			id_statut = id_statut,
+			lib_statut = lib_statut
+		};
+		
 	}
 }
