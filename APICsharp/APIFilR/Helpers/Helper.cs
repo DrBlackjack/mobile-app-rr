@@ -26,5 +26,9 @@ namespace APIFilR.Helpers
         {
             return Argon2.Verify(hash, password);
         }
+        public static string GetPathImage()
+        {
+            return ConfigurationManager.AppSettings["PathImages"];
+        }
     }
 }
