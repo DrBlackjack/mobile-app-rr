@@ -29,7 +29,7 @@
   </ion-content>
 </template>
 
-<script lang="ts">
+<script>
 import { IonContent } from '@ionic/vue';
 import { IonItem, IonLabel, IonList, IonSelectOption, IonSelect  } from '@ionic/vue';
 import axios from 'axios';

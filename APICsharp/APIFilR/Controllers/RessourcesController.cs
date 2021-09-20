@@ -75,7 +75,7 @@ namespace APIFilR
             return Ok(ctx.Ressources.ToList());
         }
 
-        [HttpGet("GetRessourcesByType/{idTypeRessource}")]
+        [HttpGet("GetRessourcesByType/{idTypeCategorie}/{idTypeRessource}/{idRelationRessource}/{idStatutRessource}")]
         public ActionResult<RESSOURCES> GetRessourcesByType(int idTypeRessource)
         {
             using MainContext ctx = new MainContext();
