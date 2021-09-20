@@ -55,7 +55,7 @@ namespace APIFilR
             {
                 StringBuilder builder = new StringBuilder();
 
-                foreach (byte b in provider.ComputeHash(Encoding.UTF8.GetBytes(token)))
+                foreach (byte b in provider.ComputeHash(Encoding.UTF8.GetBytes(mail)))
                     builder.Append(b.ToString("x2").ToLower());
 
                 token = builder.ToString();
@@ -70,27 +70,23 @@ namespace APIFilR
             return Ok(TokenHelper.Get(mail));
         }
 
-        /*[HttpGet("VerifyAccount/{token}")]
-        public async Task<ActionResult<UTILISATEUR>> VerifyAccount(string token, string mdp, string nom, string prenom)
+        [HttpGet("VerifyAccount/{token}")]
+        public async Task<ActionResult<UTILISATEUR>> VerifyAccount(string token)
         {
             using MainContext ctx = new MainContext();
-            // On check si l'utilisateur n'existe pas déjà
-            if (ctx.Utilisateur.Any(t => t.token_verif == token))
+            // On check si l'utilisateur avec ce token existe
+            if (!ctx.Utilisateur.Any(t => t.token_verif == token))
             {
-                return BadRequest("Already exist");
+                return BadRequest("Invalid verification token");
             }
 
-            // On créé un token avec un md5 du mail
-            //var token = MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(token)).ToString();
-
-            var util = new UTILISATEUR() { id_type_compte = 1, mail = token, mdp = Helper.HashPassword(mdp), nom = nom, prenom = prenom, verifie = 0, token_verif = token };
-            ctx.Add(util);
+            // Si l'utilisateur existe, on passe verifie à 1
+            UTILISATEUR util = ctx.Utilisateur.Where(u => u.token_verif == token).FirstOrDefault();
+            util.verifie = 1;
             await ctx.SaveChangesAsync();
-            //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
-            EmailHelper email = new EmailHelper();
-            email.EmailSend(token, prenom, token);
-            return Ok(TokenHelper.Get(token));
-        }*/
+
+            return Ok("Compte vérifié");
+        }
 
         [HttpGet("Login/{mail}/{mdp}")]
         public ActionResult<UTILISATEUR> Login(string mail, string mdp)

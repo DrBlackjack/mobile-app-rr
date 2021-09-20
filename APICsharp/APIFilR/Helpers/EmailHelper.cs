@@ -18,7 +18,7 @@ namespace APIFilR.Helpers
                     mail.From = new MailAddress("ressourcesrelationnelles.mailer@gmail.com");
                     mail.To.Add(mailTo);
                     mail.Subject = "Vérification du compte";
-                    mail.Body = $"Bonjour {prenom}, veuillez vérifier votre compte \n https://localhost:44333/VerifyAccount/{token}";
+                    mail.Body = $"Bonjour {prenom}, veuillez vérifier votre compte \n https://localhost:44333/Utilisateur/VerifyAccount/{token}";
                     mail.IsBodyHtml = false;
 
                     using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
