@@ -40,6 +40,7 @@
                     <ion-select-option v-for="el in statuts" :key="el.id_statut" :value="el.id_statut"> {{el.lib_statut}}</ion-select-option>
                 </ion-select>
             </ion-item>
+            <ion-label v-if="errorMessage != ''" style="color:#C20000">{{errorMessage}}</ion-label>
             <ion-button @click="createRessource()" shape="round" type="submit" expand="block">Créer</ion-button>
         </form>
     </base-layout>
@@ -71,7 +72,8 @@ export default {
             types: [], 
             relations: [],
             statuts: [],
-            selectedFile: null
+            selectedFile: null,
+            errorMessage: ''
         }
     },
     created: function () {
@@ -126,8 +128,9 @@ export default {
             )
             .then(response => {
                 // JSON responses are automatically parsed.
-                console.log(response.data);
-                this.posts = response.data;
+                if(e.data.status == "error") {        
+                    this.showError(e.data.message);
+                }
             })
             .catch(e => {
                 console.log(e);
@@ -137,6 +140,11 @@ export default {
         },
         onFileSelected(event){
             this.selectedFile = event.target.files[0];
+        },
+        showError(error){
+            // On affiche l'erreur à l'utilisateur 7 secondes
+            this.errorMessage = error;
+            setTimeout(function(){ this.errorMessage = ''; }.bind(this), 7000);
         }
     }
 }
