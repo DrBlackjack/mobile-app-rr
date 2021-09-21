@@ -92,7 +92,7 @@ export default {
                     monJson: {
                         idCategorie: parseInt(this.categorie),
                         idType: parseInt(this.type),
-                        idRelation: parseInt(this.relation),
+                        Relations: parseInt(this.relation),
                         idStatut: parseInt(this.statut)
                     }
                 },

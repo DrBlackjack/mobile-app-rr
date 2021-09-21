@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using System;
 using Microsoft.AspNetCore.Http;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace APIFilR
 {
@@ -46,11 +48,44 @@ namespace APIFilR
             {
                 return BadRequest("Already exist");
             }
-            var util = new UTILISATEUR() { id_type_compte = 1, mail = mail, mdp = Helper.HashPassword(mdp), nom = nom, prenom = prenom, verifie = 0 };
+
+            // On créé un token avec un md5 du mail
+            string token = string.Empty;
+            using (var provider = MD5.Create())
+            {
+                StringBuilder builder = new StringBuilder();
+
+                foreach (byte b in provider.ComputeHash(Encoding.UTF8.GetBytes(mail)))
+                    builder.Append(b.ToString("x2").ToLower());
+
+                token = builder.ToString();
+            }
+
+            var util = new UTILISATEUR() { id_type_compte = 1, mail = mail, mdp = Helper.HashPassword(mdp), nom = nom, prenom = prenom, verifie = 0, token_verif = token };
             ctx.Add(util);
             await ctx.SaveChangesAsync();
             //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
+            EmailHelper email = new EmailHelper();
+            email.EmailSend(mail, prenom, token);
             return Ok(TokenHelper.Get(mail));
+        }
+
+        [HttpGet("VerifyAccount/{token}")]
+        public async Task<ActionResult<UTILISATEUR>> VerifyAccount(string token)
+        {
+            using MainContext ctx = new MainContext();
+            // On check si l'utilisateur avec ce token existe
+            if (!ctx.Utilisateur.Any(t => t.token_verif == token))
+            {
+                return BadRequest("Invalid verification token");
+            }
+
+            // Si l'utilisateur existe, on passe verifie à 1
+            UTILISATEUR util = ctx.Utilisateur.Where(u => u.token_verif == token).FirstOrDefault();
+            util.verifie = 1;
+            await ctx.SaveChangesAsync();
+
+            return Ok("Compte vérifié");
         }
 
         [HttpGet("Login/{mail}/{mdp}")]
